@@ -3,7 +3,8 @@ import "reflect-metadata"
 import dotenv from "dotenv"
 import { testDbConnection } from "./config/DatabaseConfig"
 import { initializeDataSource } from "./ormconfig"
-import clientsRouter from "./routes/Clients"
+import clienteRouter from "./routes/ClienteRouter"
+import produtoRouter from "./routes/ProdutoRouter"
 
 dotenv.config()
 
@@ -11,7 +12,8 @@ const app = express()
 const port = process.env.BACKEND_PORT
 
 app.use(express.json())
-app.use("/clients", clientsRouter)
+app.use("/cliente", clienteRouter)
+app.use("/produto", produtoRouter)
 
 app.get("/", (_req, res) => {
   res.send("API rodando com sucesso!")

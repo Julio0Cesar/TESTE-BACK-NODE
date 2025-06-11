@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import * as ClientsService from "../services/ClientsService"
+import * as ClientsService from "../services/ClienteService"
 
 export async function createClient(req: Request, res: Response) {
   try {
