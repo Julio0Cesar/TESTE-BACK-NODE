@@ -24,7 +24,7 @@ export async function emitirNotaFiscal(data: EmitirNotaFiscalInput) {
   const notaFiscalRepo = AppDataSource.getRepository(NotaFiscal)
   const notaFiscalItemRepo = AppDataSource.getRepository(NotaFiscalItem)
 
-  const cliente = await clienteRepo.findOneBy({ id: Number(clientId) })
+  const cliente = await clienteRepo.findOneBy({ id: clientId })
   if (!cliente) {
     throw new Error("Cliente não encontrado")
   }
@@ -79,4 +79,10 @@ export async function emitirNotaFiscal(data: EmitirNotaFiscalInput) {
   }
 
   return notaFiscal
+}
+
+export async function listarNotasFiscais() {
+  const notaFiscalRepo = AppDataSource.getRepository(NotaFiscal)
+  const notasFiscais = await notaFiscalRepo.find()
+  return notasFiscais
 }
