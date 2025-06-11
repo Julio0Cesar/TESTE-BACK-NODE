@@ -20,3 +20,19 @@ export async function listarNotaFiscal(req: Request, res: Response) {
     return res.status(500).json({ message: "Erro interno no servidor" })
   }
 }
+
+export async function detalharNotaFiscal(req: Request, res: Response) {
+  try {
+    const { id } = req.params
+    const nota = await FaturaService.buscarNotaPorId(id)
+
+    if (!nota) {
+      return res.status(404).json({ message: "Nota fiscal não encontrada" })
+    }
+
+    return res.status(200).json(nota)
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: "Erro interno no servidor" })
+  }
+}

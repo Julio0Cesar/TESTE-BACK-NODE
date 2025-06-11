@@ -86,3 +86,12 @@ export async function listarNotasFiscais() {
   const notasFiscais = await notaFiscalRepo.find()
   return notasFiscais
 }
+
+export async function buscarNotaPorId(id: string) {
+  const notaFiscalRepo = AppDataSource.getRepository(NotaFiscal)
+  const nota = await notaFiscalRepo.findOne({
+    where: { id },
+    relations: ["cliente", "itens", "itens.produto"],
+  })
+  return nota
+}

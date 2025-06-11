@@ -17,7 +17,7 @@ export async function criarProduto(req: Request, res: Response) {
   }
 }
 
-export async function listarProdutos(res: Response) {
+export async function listarProdutos(req: Request, res: Response) {
   try {
     const clientes = await ProdutoService.listarProdutos()
     return res.status(200).json(clientes)
