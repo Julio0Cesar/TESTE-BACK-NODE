@@ -16,3 +16,14 @@ export async function createClient(req: Request, res: Response) {
     return res.status(500).json({ message: "Erro interno no servidor" })
   }
 }
+
+
+export async function listClients(req: Request, res: Response) {
+  try {
+    const clientes = await ClientsService.listClients()
+    return res.status(200).json(clientes)
+  } catch (error) {
+    console.error(error)
+    return res.status(500).json({ message: "Erro interno no servidor" })
+  }
+}

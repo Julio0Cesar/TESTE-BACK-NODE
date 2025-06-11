@@ -30,3 +30,9 @@ export async function createClient(data: ClienteInput) {
 
   return novoCliente
 }
+
+export async function listClients() {
+  const clienteRepo = AppDataSource.getRepository(Cliente)
+  const clientes = await clienteRepo.find()
+  return clientes
+}
