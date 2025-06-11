@@ -1,4 +1,5 @@
 import { DataSource } from "typeorm";
+import { Cliente } from "./models/entities/Cliente";
 import { dbConfig } from "./config/dbConfig";
 
 export const AppDataSource = new DataSource({
@@ -8,6 +9,7 @@ export const AppDataSource = new DataSource({
   username: dbConfig.user,
   password: dbConfig.password,
   database: dbConfig.database,
+  entities: [Cliente],
   synchronize: true,
   logging: false,
 });
