@@ -1,28 +1,28 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
 @Entity()
 export class Produto {
   @PrimaryGeneratedColumn("uuid")
-  id!: string;
+  id!: string
 
   @Column()
-  nome!: string;
+  nome!: string
 
   @Column({ length: 20 })
-  ncm!: string;
+  ncm!: string
 
   @Column({ length: 10 })
-  cfop!: string;
+  cfop!: string
 
   @Column("decimal", { precision: 10, scale: 2 })
-  precoUnitario!: number;
+  precoUnitario!: number
 
   @Column({ default: false })
-  industrializado!: boolean;
+  industrializado!: boolean
 
   @Column("int")
-  estoque!: number;
+  estoque!: number
 
   @Column("text", { nullable: true })
-  descricao?: string;
+  descricao?: string
 }

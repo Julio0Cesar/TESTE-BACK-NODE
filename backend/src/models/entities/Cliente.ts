@@ -1,16 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
 @Entity()
 export class Cliente {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id!: string
 
   @Column({ length: 100 })
-  nome!: string;
+  nome!: string
 
   @Column({ length: 100, unique: true })
-  email!: string;
+  email!: string
 
   @Column()
-  cnpj!: string;
+  cnpj!: string
 }

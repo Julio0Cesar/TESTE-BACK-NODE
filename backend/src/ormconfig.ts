@@ -2,6 +2,8 @@ import { DataSource } from "typeorm"
 import { Cliente } from "./models/entities/Cliente"
 import { dbConfig } from "./config/dbConfig"
 import { Produto } from "./models/entities/Produto"
+import { NotaFiscal } from "./models/entities/NotaFiscal"
+import { NotaFiscalItem } from "./models/entities/NotaFiscalItem"
 
 export const AppDataSource = new DataSource({
   type: "mysql",
@@ -10,7 +12,7 @@ export const AppDataSource = new DataSource({
   username: dbConfig.user,
   password: dbConfig.password,
   database: dbConfig.database,
-  entities: [Cliente, Produto],
+  entities: [Cliente, Produto, NotaFiscal, NotaFiscalItem],
   synchronize: true,
   logging: false,
 })

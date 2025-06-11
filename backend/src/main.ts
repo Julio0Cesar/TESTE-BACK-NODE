@@ -5,6 +5,7 @@ import { testDbConnection } from "./config/DatabaseConfig"
 import { initializeDataSource } from "./ormconfig"
 import clienteRouter from "./routes/ClienteRouter"
 import produtoRouter from "./routes/ProdutoRouter"
+import NotaFiscalRouter from "./routes/NotaFiscalRouter"
 
 dotenv.config()
 
@@ -14,6 +15,7 @@ const port = process.env.BACKEND_PORT
 app.use(express.json())
 app.use("/cliente", clienteRouter)
 app.use("/produto", produtoRouter)
+app.use("/fatura", NotaFiscalRouter)
 
 app.get("/", (_req, res) => {
   res.send("API rodando com sucesso!")
