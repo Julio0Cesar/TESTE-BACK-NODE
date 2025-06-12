@@ -7,7 +7,7 @@ interface ClienteInput {
   cnpj?: string
 }
 
-export async function createClient(data: ClienteInput) {
+export async function criarClientenoBancoAsync(data: ClienteInput) {
   const { nome, email, cnpj } = data
 
   if (!nome || !email || !cnpj) {

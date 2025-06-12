@@ -1,8 +1,10 @@
 import { Router } from "express"
-import { createClient, listClients } from "./cliente.controller"
+import { criarClienteAsync, listClients } from "./cliente.controller"
+import { createClienteSchema } from "./schemas/create-cliente.schemas"
+import { validateRequest } from "../../shared/middleware/validate-request"
 
 const router = Router()
 
-router.post("/criar", createClient)
+router.post("/criar", validateRequest(createClienteSchema), criarClienteAsync)
 router.get("/listar", listClients)
 export default router

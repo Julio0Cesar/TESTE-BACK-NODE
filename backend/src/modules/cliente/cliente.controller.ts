@@ -1,17 +1,11 @@
 import { Request, Response } from "express"
-import * as ClientsService from "./cliente.service"
+import { criarClientenoBancoAsync } from "./cliente.service"
 
-export async function createClient(req: Request, res: Response) {
+export async function criarClienteAsync(req: Request, res: Response) {
   try {
-    const novoCliente = await ClientsService.createClient(req.body)
+    const novoCliente = await criarClientenoBancoAsync(req.body)
     return res.status(201).json(novoCliente)
   } catch (error: any) {
-    if (error.message === "Campos obrigatórios faltando") {
-      return res.status(400).json({ message: error.message })
-    }
-    if (error.message === "Cliente já cadastrado") {
-      return res.status(409).json({ message: error.message })
-    }
     console.error(error)
     return res.status(500).json({ message: "Erro interno no servidor" })
   }
