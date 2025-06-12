@@ -1,38 +1,20 @@
 import { Request, Response } from "express";
-import * as FaturaService from "./nota-fiscal.service";
+import { listarNotaFiscalPorId, listarNotasFiscais, registrarNovaNotaFiscal } from "./nota-fiscal.service";
+import { NotaFiscalDTO } from "./dto/criar-nota-fiscal.dto";
 
-export async function emitirNotaFiscal(req: Request, res: Response) {
-  try {
-    const notaFiscal = await FaturaService.emitirNotaFiscal(req.body);
-    return res.status(201).json(notaFiscal);
-  } catch (error: any) {
-    console.error(error);
-    return res.status(400).json({ message: error.message || "Erro ao emitir nota fiscal" });
-  }
+export async function handleEmitirNotaFiscal(req: Request<{}, {}, NotaFiscalDTO>, res: Response) {
+  const novaNotaFiscal = await registrarNovaNotaFiscal(req.body)
+  res.status(201).json({ message: "Nota Fiscal emitida com sucesso", novaNotaFiscal })
+  return
 }
 
-export async function listarNotaFiscal(req: Request, res: Response) {
-  try {
-    const notasFiscais = await FaturaService.listarNotasFiscais()
-    return res.status(200).json(notasFiscais)
-  } catch (error) {
-    console.error(error)
-    return res.status(500).json({ message: "Erro interno no servidor" })
-  }
+export async function handleListarNotaFiscal(req: Request, res: Response) {
+  const produtos = await listarNotasFiscais()
+  res.status(200).json(produtos)
 }
 
-export async function detalharNotaFiscal(req: Request, res: Response) {
-  try {
-    const { id } = req.params
-    const nota = await FaturaService.buscarNotaPorId(id)
-
-    if (!nota) {
-      return res.status(404).json({ message: "Nota fiscal não encontrada" })
-    }
-
-    return res.status(200).json(nota)
-  } catch (error) {
-    console.error(error)
-    return res.status(500).json({ message: "Erro interno no servidor" })
-  }
+export async function handleDetalharNotaFiscal(req: Request, res: Response) {
+  const { id } = req.params
+  const produtos = await listarNotaFiscalPorId(id)
+  res.status(200).json(produtos)
 }

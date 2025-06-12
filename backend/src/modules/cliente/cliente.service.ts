@@ -1,12 +1,12 @@
 import { HttpError } from "../../shared/errors/error-middleware"
 import { hashSenha } from "../../shared/utils/hash"
-import { buscarClientes, buscarPorEmailOuCnpj, salvarCliente } from "./cliente.repository"
+import { buscarClientes, buscarClientePorEmailOuCnpj, salvarCliente } from "./cliente.repository"
 import { ClienteDTO } from "./dto/create-cliente.dto"
 
 export async function registrarNovoCliente(data: ClienteDTO) {
   const { email, cnpj } = data
 
-  const clienteExistente = await buscarPorEmailOuCnpj(email, cnpj)
+  const clienteExistente = await buscarClientePorEmailOuCnpj(email, cnpj)
   if (clienteExistente) {
     throw new HttpError("Cliente já registrado", 400)
   }

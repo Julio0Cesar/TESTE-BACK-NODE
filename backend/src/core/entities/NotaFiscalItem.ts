@@ -7,24 +7,24 @@ export class NotaFiscalItem {
   @PrimaryGeneratedColumn("uuid")
   id!: string
 
-  @ManyToOne(() => NotaFiscal, nota => nota.itens)
+  @ManyToOne(() => NotaFiscal, nota => nota.itens, { nullable: false })
   notaFiscal!: NotaFiscal
 
-  @ManyToOne(() => Produto, { eager: true })
+  @ManyToOne(() => Produto, { eager: true, nullable: false })
   produto!: Produto
 
   @Column("int")
   quantidade!: number
 
-  @Column("decimal", { precision: 10, scale: 2 })
+  @Column("decimal", { precision: 12, scale: 2 })
   precoUnitario!: number
 
-  @Column("decimal", { precision: 10, scale: 2 })
+  @Column("decimal", { precision: 12, scale: 2 })
   icms!: number
 
-  @Column("decimal", { precision: 10, scale: 2 })
+  @Column("decimal", { precision: 12, scale: 2 })
   ipi!: number
 
-  @Column("decimal", { precision: 10, scale: 2 })
+  @Column("decimal", { precision: 12, scale: 2 })
   total!: number
 }

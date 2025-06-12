@@ -51,4 +51,10 @@ export const createProdutoSchema = Joi.object({
             "any.required": "Preço é obrigatório",
         }),     
         
+    industrializado: Joi.boolean()
+        .required() 
+        .messages({
+            "boolean.base": "Industrializado deve ser um True ou False",
+            "any.required": "Industrializado é obrigatório",
+        }), 
 })

@@ -1,82 +1,38 @@
 import { AppDataSource } from "../../ormconfig"
-import { Cliente } from "../../core/entities/Cliente"
-import { Produto } from "../../core/entities/Produto"
 import { NotaFiscal } from "../../core/entities/NotaFiscal"
-import { NotaFiscalItem } from "../../core/entities/NotaFiscalItem"
+import { NotaFiscalDTO } from "./dto/criar-nota-fiscal.dto"
+import { HttpError } from "../../shared/errors/error-middleware"
+import { buscarClientePorId } from "../cliente/cliente.repository"
+import { buscarProdutoPorId } from "../produto/produto.repository"
+import { criarCalculadoraNotaFiscal } from "../../shared/utils/calcular-nota-fiscal"
+import { salvarNotaFiscal } from "./nota-fiscal.repository"
 
-interface EmitirNotaFiscalInput {
-  clientId: string
-  products: {
-    productId: string
-    quantity: number
-  }[]
-}
+export async function registrarNovaNotaFiscal(data: NotaFiscalDTO) {
+  const { clienteId, produtos } = data
 
-export async function emitirNotaFiscal(data: EmitirNotaFiscalInput) {
-  const { clientId, products } = data
+  const clienteRepo = await buscarClientePorId(clienteId)
+  if (!clienteRepo) 
+    throw new HttpError("Cliente não encontrado", 400)
 
-  if (!clientId || !products || products.length === 0) {
-    throw new Error("Dados da nota fiscal inválidos")
+  const calculadora = criarCalculadoraNotaFiscal()
+  for (const item of produtos) {
+    const produto = await buscarProdutoPorId(item.produtoId)
+
+    if (!produto) 
+      throw new HttpError("Produto não encontrado", 400)
+
+    calculadora.calcularItem(produto, item.quantidade)
   }
-
-  const clienteRepo = AppDataSource.getRepository(Cliente)
-  const produtoRepo = AppDataSource.getRepository(Produto)
-  const notaFiscalRepo = AppDataSource.getRepository(NotaFiscal)
-  const notaFiscalItemRepo = AppDataSource.getRepository(NotaFiscalItem)
-
-  const cliente = await clienteRepo.findOneBy({ id: clientId })
-  if (!cliente) {
-    throw new Error("Cliente não encontrado")
-  }
-
-  let valorTotal = 0
-  let icmsTotal = 0
-  let ipiTotal = 0
-
-  const itensNota: NotaFiscalItem[] = []
-
-  for (const item of products) {
-    const produto = await produtoRepo.findOneBy({ id: item.productId })
-    if (!produto) throw new Error(`Produto com ID ${item.productId} não encontrado`)
-
-    const quantidade = item.quantity
-    const preco = produto.precoUnitario
-
-    const icms = preco * quantidade * 0.18
-    const ipi = produto.industrializado ? preco * quantidade * 0.04 : 0
-    const total = preco * quantidade
-
-    valorTotal += total + icms + ipi
-    icmsTotal += icms
-    ipiTotal += ipi
-
-    const notaItem = notaFiscalItemRepo.create({
-      produto,
-      quantidade,
-      precoUnitario: preco,
-      icms,
-      ipi,
-      total,
-    })
-
-    itensNota.push(notaItem)
-  }
-
-  const notaFiscal = notaFiscalRepo.create({
-    cliente,
-    dataEmissao: new Date(),
+  
+  const  { valorTotal, icmsTotal, ipiTotal, itensNota } = calculadora.resultado()
+  const notaFiscal = await salvarNotaFiscal({
+    cliente: clienteRepo,
     valorTotal,
     icmsTotal,
     ipiTotal,
     itens: itensNota,
-    xml: "ainda_nao_gerado", // placeholder
+    xml: "ainda_nao_gerado",
   })
-
-  await notaFiscalRepo.save(notaFiscal)
-  for (const item of itensNota) {
-    item.notaFiscal = notaFiscal
-    await notaFiscalItemRepo.save(item)
-  }
 
   return notaFiscal
 }
@@ -87,7 +43,7 @@ export async function listarNotasFiscais() {
   return notasFiscais
 }
 
-export async function buscarNotaPorId(id: string) {
+export async function listarNotaFiscalPorId(id: string) {
   const notaFiscalRepo = AppDataSource.getRepository(NotaFiscal)
   const nota = await notaFiscalRepo.findOne({
     where: { id },

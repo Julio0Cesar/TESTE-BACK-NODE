@@ -3,4 +3,5 @@ export interface ProdutoDTO {
   ncm: string
   cfop: string
   preco: number
+  industrializado: boolean
 }

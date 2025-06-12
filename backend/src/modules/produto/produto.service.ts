@@ -1,11 +1,11 @@
 import { HttpError } from "../../shared/errors/error-middleware"
 import { ProdutoDTO } from "./dto/criar-produto.dto"
-import { buscarPorCfopOuNcm, buscarProdutos, salvarProduto } from "./produto.repository"
+import { buscarProdutoPorCfopOuNcm, buscarProdutos, salvarProduto } from "./produto.repository"
 
 export async function registrarNovoProduto(data: ProdutoDTO) {
   const { ncm, cfop, nome } = data
 
-  const produtoExistente = await buscarPorCfopOuNcm(nome, cfop, ncm)
+  const produtoExistente = await buscarProdutoPorCfopOuNcm(nome, cfop, ncm)
   if(produtoExistente)
     throw new HttpError("Produto já registrado", 400)
 

@@ -17,4 +17,7 @@ export class Produto {
 
   @Column("decimal", { precision: 10, scale: 2 })
   preco!: number
+  
+  @Column({ default: false })
+  industrializado!: boolean
 }

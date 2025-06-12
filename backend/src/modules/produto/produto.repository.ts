@@ -1,9 +1,12 @@
 import { Produto } from "../../core/entities/Produto";
 import { AppDataSource } from "../../ormconfig";
 
-
-export async function buscarPorCfopOuNcm(nome: string, cfop: string, ncm: string){
+export async function buscarProdutoPorCfopOuNcm(nome: string, cfop: string, ncm: string){
     return AppDataSource.getRepository(Produto).findOneBy({ nome, ncm, cfop })
+}
+
+export async function buscarProdutoPorId(id: string): Promise<Produto | null>{
+    return AppDataSource.getRepository(Produto).findOneBy({ id })
 }
 
 export async function salvarProduto(data: Partial<Produto>){
