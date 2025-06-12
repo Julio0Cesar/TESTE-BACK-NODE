@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
+// uso de string para não dar problemas com zeros a esquerda
 @Entity()
 export class Produto {
   @PrimaryGeneratedColumn("uuid")
@@ -8,21 +9,12 @@ export class Produto {
   @Column()
   nome!: string
 
-  @Column({ length: 20 })
+  @Column({ length: 8 })
   ncm!: string
 
-  @Column({ length: 10 })
+  @Column({ length: 4 })
   cfop!: string
 
   @Column("decimal", { precision: 10, scale: 2 })
-  precoUnitario!: number
-
-  @Column({ default: false })
-  industrializado!: boolean
-
-  @Column("int")
-  estoque!: number
-
-  @Column("text", { nullable: true })
-  descricao?: string
+  preco!: number
 }

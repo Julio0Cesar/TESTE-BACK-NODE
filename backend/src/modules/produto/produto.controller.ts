@@ -1,28 +1,14 @@
 import { Request, Response } from "express"
-import * as ProdutoService from "./produto.service"
+import { listarProdutos, registrarNovoProduto } from "./produto.service"
+import { ProdutoDTO } from "./dto/criar-produto.dto"
 
-export async function criarProduto(req: Request, res: Response) {
-  try {
-    const novoProduto = await ProdutoService.criarProduto(req.body)
-    return res.status(201).json(novoProduto)
-  } catch (error: any) {
-    if (error.message === "Campos obrigatórios faltando") {
-      return res.status(400).json({ message: error.message })
-    }
-    if (error.message === "Produto já cadastrado") {
-      return res.status(409).json({ message: error.message })
-    }
-    console.error(error)
-    return res.status(500).json({ message: "Erro interno no servidor" })
-  }
+export async function handleCriarProduto(req: Request<{}, {}, ProdutoDTO>, res: Response) {
+  const novoProduto = await registrarNovoProduto(req.body)
+  res.status(201).json({ message: "Produto criado com sucesso", novoProduto })
+  return
 }
 
-export async function listarProdutos(req: Request, res: Response) {
-  try {
-    const clientes = await ProdutoService.listarProdutos()
-    return res.status(200).json(clientes)
-  } catch (error) {
-    console.error(error)
-    return res.status(500).json({ message: "Erro interno no servidor" })
-  }
+export async function handleListarProdutos(req: Request, res: Response) {
+  const produtos = await listarProdutos()
+  res.status(200).json(produtos)
 }

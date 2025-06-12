@@ -1,42 +1,18 @@
-import { Produto } from "../../core/entities/Produto"
-import { AppDataSource } from "../../ormconfig"
+import { HttpError } from "../../shared/errors/error-middleware"
+import { ProdutoDTO } from "./dto/criar-produto.dto"
+import { buscarPorCfopOuNcm, buscarProdutos, salvarProduto } from "./produto.repository"
 
-interface ProdutoInput {
-  nome?: string
-  ncm?: string
-  cfop?: string
-  precoUnitario?: number
-  industrializado?: boolean
-  estoque?: number
-  descricao?: string
-}
+export async function registrarNovoProduto(data: ProdutoDTO) {
+  const { ncm, cfop, nome } = data
 
-export async function criarProduto(data: ProdutoInput) {
-  const { nome, ncm, cfop, precoUnitario, industrializado, estoque, descricao } = data
+  const produtoExistente = await buscarPorCfopOuNcm(nome, cfop, ncm)
+  if(produtoExistente)
+    throw new HttpError("Produto já registrado", 400)
 
-  if (!nome || !ncm || !cfop) {
-    throw new Error("Campos obrigatórios faltando")
-  }
-
-  const produtoRepo = AppDataSource.getRepository(Produto)
-
-  const produtoExistente = await produtoRepo.findOneBy([
-    { ncm },
-    { cfop }
-  ])
-
-  if (produtoExistente) {
-    throw new Error("Produto já cadastrado")
-  }
-
-  const novoProduto = produtoRepo.create({ nome, ncm, cfop, precoUnitario, industrializado, estoque, descricao })
-  await produtoRepo.save(novoProduto)
-
-  return novoProduto
+  return await salvarProduto(data)
 }
 
 export async function listarProdutos() {
-  const produtoRepo = AppDataSource.getRepository(Produto)
-  const produtos = await produtoRepo.find()
-  return produtos
+  return await buscarProdutos()
 }
+

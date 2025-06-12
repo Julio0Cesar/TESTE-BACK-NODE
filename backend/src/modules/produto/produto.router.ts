@@ -1,8 +1,10 @@
 import { Router } from "express"
-import { criarProduto, listarProdutos } from "./produto.controller"
+import { handleCriarProduto, handleListarProdutos } from "./produto.controller"
+import { createProdutoSchema } from "./schemas/criar-produto.schemas"
+import { validateRequest } from "../../shared/middleware/validate-request"
 
 const router = Router()
 
-router.post("/criar", criarProduto)
-router.get("/listar", listarProdutos)
+router.post("/criar", validateRequest(createProdutoSchema), handleCriarProduto)
+router.get("/listar", handleListarProdutos)
 export default router
