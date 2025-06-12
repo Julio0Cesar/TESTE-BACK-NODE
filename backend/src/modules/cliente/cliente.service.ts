@@ -1,31 +1,18 @@
-import { AppDataSource } from "../../ormconfig"
-import { Cliente } from "../../core/entities/Cliente"
 import { erroHandling } from "../../shared/errors/erro-handling"
+import { buscarClientes, buscarPorEmailOuCnpj, salvarCliente } from "./cliente.repository"
+import { ClienteDTO } from "./dto/create-cliente.dto"
 
-interface ClienteInput {
-  nome?: string
-  email?: string
-  cnpj?: string
-  senha?: string
-}
+export async function registrarNovoCliente(data: ClienteDTO) {
+  const { email, cnpj } = data
 
-export async function criarClienteNoBancoAsync(data: ClienteInput) {
-  const { nome, email, cnpj, senha } = data
-
-  const clienteRepo = AppDataSource.getRepository(Cliente)
-
-  const existingClient = await clienteRepo.findOneBy([ { email }, { cnpj } ])
-  if (existingClient) {
+  const clienteExistente = await buscarPorEmailOuCnpj(email, cnpj)
+  if (clienteExistente) {
     throw new erroHandling("Cliente já registrado", 400)
   }
 
-  const novoCliente = clienteRepo.create({ nome, email, cnpj, senha })
-  await clienteRepo.save(novoCliente)
-  return novoCliente
+  return await salvarCliente(data)
 }
 
-export async function listarClientesDoBancoAsync() {
-  const clienteRepo = AppDataSource.getRepository(Cliente)
-  const clientes = await clienteRepo.find()
-  return clientes
+export async function listarClientes() {
+  return await buscarClientes() 
 }

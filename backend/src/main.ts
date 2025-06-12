@@ -3,6 +3,7 @@ import "reflect-metadata"
 import dotenv from "dotenv"
 import { testDbConnection } from "./config/databaseConfig"
 import { initializeDataSource } from "./ormconfig"
+import { errorHandler } from "./shared/errors/erro-handling"
 import clienteRouter from "./modules/cliente/cliente.router"
 import produtoRouter from "./modules/produto/produto.router"
 import NotaFiscalRouter from "./modules/nota-fiscal/nota-fiscal.router"
@@ -16,6 +17,7 @@ app.use(express.json())
 app.use("/cliente", clienteRouter)
 app.use("/produto", produtoRouter)
 app.use("/fatura", NotaFiscalRouter)
+app.use(errorHandler)
 
 app.get("/", (_req, res) => {
   res.send("API rodando com sucesso!")

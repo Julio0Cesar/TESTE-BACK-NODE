@@ -8,7 +8,8 @@ export const validateRequest =
 
     if (error) {
       const detalhes = error.details.map((d) => d.message)
-      return res.status(400).json({ erro: "Requisição inválida", detalhes })
+      res.status(400).json({ erro: "Requisição inválida", detalhes })
+      return
     }
 
     next()

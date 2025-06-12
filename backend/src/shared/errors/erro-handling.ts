@@ -1,3 +1,5 @@
+import { Request, Response, NextFunction } from "express"
+
 export class erroHandling extends Error {
   statusCode: number
 
@@ -6,4 +8,14 @@ export class erroHandling extends Error {
     this.statusCode = statusCode
     Error.captureStackTrace(this, this.constructor)
   }
+}
+
+export function errorHandler(err: any, req: Request, res: Response, next: NextFunction) {
+  if (err instanceof erroHandling) {
+    res.status(err.statusCode).json({ message: err.message })
+    return
+  }
+
+  console.error("Erro não tratado:", err)
+  res.status(500).json({ message: "Erro interno no servidor" })
 }
