@@ -1,4 +1,5 @@
-import { erroHandling } from "../../shared/errors/erro-handling"
+import { HttpError } from "../../shared/errors/error-middleware"
+import { hashSenha } from "../../shared/utils/hash"
 import { buscarClientes, buscarPorEmailOuCnpj, salvarCliente } from "./cliente.repository"
 import { ClienteDTO } from "./dto/create-cliente.dto"
 
@@ -7,8 +8,11 @@ export async function registrarNovoCliente(data: ClienteDTO) {
 
   const clienteExistente = await buscarPorEmailOuCnpj(email, cnpj)
   if (clienteExistente) {
-    throw new erroHandling("Cliente já registrado", 400)
+    throw new HttpError("Cliente já registrado", 400)
   }
+
+  const senhaHash = await hashSenha(data.senha)
+  data.senha = senhaHash 
 
   return await salvarCliente(data)
 }
