@@ -1,5 +1,5 @@
-import { Produto } from "../models/entities/Produto"
-import { AppDataSource } from "../ormconfig"
+import { Produto } from "../../core/entities/Produto"
+import { AppDataSource } from "../../ormconfig"
 
 interface ProdutoInput {
   nome?: string

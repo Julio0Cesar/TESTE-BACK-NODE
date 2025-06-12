@@ -11,6 +11,10 @@ export class Cliente {
   @Column({ length: 100, unique: true })
   email!: string
 
-  @Column()
+  @Column({ length: 14, unique: true })
   cnpj!: string
+
+  @Column({ select: false })
+  senha!: string
+
 }

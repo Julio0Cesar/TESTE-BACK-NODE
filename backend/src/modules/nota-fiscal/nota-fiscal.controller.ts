@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import * as FaturaService from "../services/FaturaService";
+import * as FaturaService from "./nota-fiscal.service";
 
 export async function emitirNotaFiscal(req: Request, res: Response) {
   try {

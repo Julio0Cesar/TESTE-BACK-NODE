@@ -1,8 +1,8 @@
-import { AppDataSource } from "../ormconfig"
-import { Cliente } from "../models/entities/Cliente"
-import { Produto } from "../models/entities/Produto"
-import { NotaFiscal } from "../models/entities/NotaFiscal"
-import { NotaFiscalItem } from "../models/entities/NotaFiscalItem"
+import { AppDataSource } from "../../ormconfig"
+import { Cliente } from "../../core/entities/Cliente"
+import { Produto } from "../../core/entities/Produto"
+import { NotaFiscal } from "../../core/entities/NotaFiscal"
+import { NotaFiscalItem } from "../../core/entities/NotaFiscalItem"
 
 interface EmitirNotaFiscalInput {
   clientId: string

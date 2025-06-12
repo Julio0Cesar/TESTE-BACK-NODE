@@ -1,9 +1,9 @@
 import { DataSource } from "typeorm"
-import { Cliente } from "./models/entities/Cliente"
+import { Cliente } from "./core/entities/Cliente"
 import { dbConfig } from "./config/dbConfig"
-import { Produto } from "./models/entities/Produto"
-import { NotaFiscal } from "./models/entities/NotaFiscal"
-import { NotaFiscalItem } from "./models/entities/NotaFiscalItem"
+import { Produto } from "./core/entities/Produto"
+import { NotaFiscal } from "./core/entities/NotaFiscal"
+import { NotaFiscalItem } from "./core/entities/NotaFiscalItem"
 
 export const AppDataSource = new DataSource({
   type: "mysql",

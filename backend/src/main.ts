@@ -1,11 +1,11 @@
 import express from "express"
 import "reflect-metadata"
 import dotenv from "dotenv"
-import { testDbConnection } from "./config/DatabaseConfig"
+import { testDbConnection } from "./config/databaseConfig"
 import { initializeDataSource } from "./ormconfig"
-import clienteRouter from "./routes/ClienteRouter"
-import produtoRouter from "./routes/ProdutoRouter"
-import NotaFiscalRouter from "./routes/NotaFiscalRouter"
+import clienteRouter from "./modules/cliente/cliente.router"
+import produtoRouter from "./modules/produto/produto.router"
+import NotaFiscalRouter from "./modules/nota-fiscal/nota-fiscal.router"
 
 dotenv.config()
 
@@ -30,7 +30,7 @@ async function startServer() {
     console.log("Teste de conexão finalizado")
 
     app.listen(port, () => {
-      console.log(`🚀 Server tá no ar na porta ${port}`)
+      console.log(`Server tá no ar na porta ${port}`)
     })
   } catch (error) {
     console.error("Erro ao iniciar aplicação:", error)

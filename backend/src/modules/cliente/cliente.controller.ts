@@ -1,15 +1,15 @@
 import { Request, Response } from "express"
-import * as ProdutoService from "../services/ProdutoService"
+import * as ClientsService from "./cliente.service"
 
-export async function criarProduto(req: Request, res: Response) {
+export async function createClient(req: Request, res: Response) {
   try {
-    const novoProduto = await ProdutoService.criarProduto(req.body)
-    return res.status(201).json(novoProduto)
+    const novoCliente = await ClientsService.createClient(req.body)
+    return res.status(201).json(novoCliente)
   } catch (error: any) {
     if (error.message === "Campos obrigatórios faltando") {
       return res.status(400).json({ message: error.message })
     }
-    if (error.message === "Produto já cadastrado") {
+    if (error.message === "Cliente já cadastrado") {
       return res.status(409).json({ message: error.message })
     }
     console.error(error)
@@ -17,9 +17,10 @@ export async function criarProduto(req: Request, res: Response) {
   }
 }
 
-export async function listarProdutos(req: Request, res: Response) {
+
+export async function listClients(req: Request, res: Response) {
   try {
-    const clientes = await ProdutoService.listarProdutos()
+    const clientes = await ClientsService.listClients()
     return res.status(200).json(clientes)
   } catch (error) {
     console.error(error)

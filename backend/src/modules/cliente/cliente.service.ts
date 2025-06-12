@@ -1,5 +1,5 @@
-import { AppDataSource } from "../ormconfig"
-import { Cliente } from "../models/entities/Cliente"
+import { AppDataSource } from "../../ormconfig"
+import { Cliente } from "../../core/entities/Cliente"
 
 interface ClienteInput {
   nome?: string

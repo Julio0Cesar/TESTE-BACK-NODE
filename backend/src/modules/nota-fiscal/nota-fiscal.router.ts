@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { emitirNotaFiscal, listarNotaFiscal, detalharNotaFiscal } from "../controllers/FaturaController"
+import { emitirNotaFiscal, listarNotaFiscal, detalharNotaFiscal } from "./nota-fiscal.controller"
 
 const router = Router()
 

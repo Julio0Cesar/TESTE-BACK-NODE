@@ -10,11 +10,11 @@ export const pool = mysql.createPool({
 
 export async function testDbConnection() {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    await connection.connect();
-    console.log("✅ Conectado ao banco MariaDB com sucesso!");
-    await connection.end();
+    const connection = await mysql.createConnection(dbConfig)
+    await connection.connect()
+    console.log("Conectado ao banco MariaDB com sucesso!")
+    await connection.end()
   } catch (error) {
-    console.error("❌ Erro ao conectar no banco:", error);
+    console.error("Erro ao conectar no banco:", error)
   }
 }
