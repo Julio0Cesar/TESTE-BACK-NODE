@@ -4,7 +4,7 @@ import { NotaFiscalDTO } from "./dto/criar-nota-fiscal.dto"
 import { validarClienteNaoEncontradoPorId } from "../cliente/cliente.service"
 import { validarProdutoNaoEncontradoPorId } from "../produto/produto.service"
 import { calcularNotaFiscal } from "../../shared/utils/calcular-nota-fiscal"
-import { salvarNotaFiscal } from "./nota-fiscal.repository"
+import { buscarNotasFiscais, buscarNotasFiscaisPorId, salvarNotaFiscal } from "./nota-fiscal.repository"
 import { gerarXmlNotaFiscal } from "../../shared/utils/gerar-xml"
 import { HttpError } from "../../shared/errors/error-middleware"
 
@@ -25,18 +25,11 @@ export async function registrarNovaNotaFiscal(data: NotaFiscalDTO) {
 }
 
 export async function listarNotasFiscais() {
-  const notaFiscalRepo = AppDataSource.getRepository(NotaFiscal)
-  const notasFiscais = await notaFiscalRepo.find()
-  return notasFiscais
+  return await buscarNotasFiscais()
 }
 
 export async function listarNotaFiscalPorId(id: string) {
-  const notaFiscalRepo = AppDataSource.getRepository(NotaFiscal)
-  const nota = await notaFiscalRepo.findOne({
-    where: { id },
-    relations: ["cliente", "itens", "itens.produto"],
-  })
-  return nota
+  return await buscarNotasFiscaisPorId(id)
 }
 
 async function buscarProdutosNaNotaFiscal(itens: NotaFiscalDTO["products"]) {
