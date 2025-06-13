@@ -25,10 +25,17 @@ export async function buscarNotasFiscais(){
   return await notaFiscalRepo.find()
 }
 
-export async function buscarNotasFiscaisPorId(id: string) {
+export async function buscarNotasFiscaisPorId(id: string, clienteId: string) {
+    console.log("id:", id)
+    console.log("clienteid:", clienteId)
     const notaFiscalRepo = AppDataSource.getRepository(NotaFiscal)
-    return await notaFiscalRepo.findOne({
-      where: { id },
+    const resultado = await notaFiscalRepo.findOne({
+    where: {
+      id,
+      cliente: { id: clienteId }
+    },
       relations: ["cliente", "itens", "itens.produto"],
     })
+    console.log("resultado: ",resultado)
+    return resultado
 }

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { listarNotaFiscalPorId, listarNotasFiscais, registrarNovaNotaFiscal } from "./nota-fiscal.service";
 import { NotaFiscalDTO } from "./dto/criar-nota-fiscal.dto";
+import { RequisicaoAutenticada } from "../../shared/middleware/requisicao-autenticada";
 
 export async function handleEmitirNotaFiscal(req: Request<{}, {}, NotaFiscalDTO>, res: Response) {
   const novaNotaFiscal = await registrarNovaNotaFiscal(req.body)
@@ -9,12 +10,16 @@ export async function handleEmitirNotaFiscal(req: Request<{}, {}, NotaFiscalDTO>
 }
 
 export async function handleListarNotaFiscal(req: Request, res: Response) {
-  const produtos = await listarNotasFiscais()
-  res.status(200).json(produtos)
+  const notaFiscal = await listarNotasFiscais()
+  res.status(200).json(notaFiscal)
+  return
 }
 
-export async function handleDetalharNotaFiscal(req: Request, res: Response) {
+export async function handleDetalharNotaFiscal(req: RequisicaoAutenticada, res: Response) {
   const { id } = req.params
-  const produtos = await listarNotaFiscalPorId(id)
-  res.status(200).json(produtos)
+  const clienteId = req.cliente!.id
+
+  const notaFiscal = await listarNotaFiscalPorId(id, clienteId)
+  res.status(200).json(notaFiscal)
+  return
 }

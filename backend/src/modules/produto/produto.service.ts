@@ -1,4 +1,4 @@
-import { HttpError } from "../../shared/errors/error-middleware"
+import { HttpError } from "../../shared/middleware/error-middleware"
 import { ProdutoDTO } from "./dto/criar-produto.dto"
 import { buscarProdutoPorCfopOuNcm, buscarProdutoPorId, buscarProdutos, salvarProduto } from "./produto.repository"
 

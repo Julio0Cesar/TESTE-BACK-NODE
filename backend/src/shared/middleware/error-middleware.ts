@@ -28,4 +28,5 @@ export function errorHandler(err: any, req: Request, res: Response, next: NextFu
   
   console.error("Erro não tratado:", err)
   res.status(500).json({ message: "Erro interno no servidor" })
+  return
 }

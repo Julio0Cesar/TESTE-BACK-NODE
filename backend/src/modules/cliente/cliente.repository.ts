@@ -5,6 +5,14 @@ export async function buscarClientePorEmailOuCnpj(email: string, cnpj: string) {
   return AppDataSource.getRepository(Cliente).findOneBy([{ email }, { cnpj }])
 }
 
+export async function buscarClientePorEmail(email: string) {
+  return AppDataSource.getRepository(Cliente)
+    .createQueryBuilder("cliente")
+    .addSelect("cliente.senha")
+    .where("cliente.email = :email", { email })
+    .getOne();
+}
+
 export async function buscarClientePorId(id: string): Promise<Cliente | null> {
   return await AppDataSource.getRepository(Cliente).findOneBy({ id })
 }

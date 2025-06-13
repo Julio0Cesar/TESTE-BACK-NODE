@@ -1,4 +1,4 @@
-import { HttpError } from "../../shared/errors/error-middleware"
+import { HttpError } from "../../shared/middleware/error-middleware"
 import { hashSenha } from "../../shared/utils/hash"
 import { buscarClientes, buscarClientePorEmailOuCnpj, salvarCliente, buscarClientePorId } from "./cliente.repository"
 import { ClienteDTO } from "./dto/create-cliente.dto"
