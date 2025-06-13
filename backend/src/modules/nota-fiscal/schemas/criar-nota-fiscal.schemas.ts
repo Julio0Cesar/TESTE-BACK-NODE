@@ -9,7 +9,7 @@ export const criarNotaFiscalSchema = Joi.object({
         "any.required": "Cliente é obrigatório",
     }),
 
-    produto: Joi.array()
+    products: Joi.array()
         .items(
         Joi.object({
             productId: Joi.string().uuid().required()
@@ -19,7 +19,7 @@ export const criarNotaFiscalSchema = Joi.object({
                 "any.required": "Produto é obrigatório",
             }),
             
-            quantidade: Joi.number().integer().min(1).required()
+            quantity: Joi.number().integer().min(1).required()
             .messages({
                 "number.base": "Quantidade deve ser um número",
                 "number.integer": "Quantidade deve ser um inteiro",

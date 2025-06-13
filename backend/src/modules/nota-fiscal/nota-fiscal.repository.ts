@@ -2,20 +2,21 @@ import { NotaFiscal } from "../../core/entities/NotaFiscal"
 import { NotaFiscalItem } from "../../core/entities/NotaFiscalItem"
 import { AppDataSource } from "../../ormconfig"
 
-export async function salvarNotaFiscal(data: Partial<NotaFiscal> ) {
+export async function salvarNotaFiscal(notaFiscalParcial: Partial<NotaFiscal> ) {
   const notaRepo = AppDataSource.getRepository(NotaFiscal)
   const itemRepo = AppDataSource.getRepository(NotaFiscalItem)
   
-  const { itens: itensNota = [], ...notaData } = data
+  const { itens: itensNota = [], ...notaData } = notaFiscalParcial
 
   const notaFiscal = notaRepo.create(notaData)
   await notaRepo.save(notaFiscal)
 
-  for (const item of itensNota) {
-    item.notaFiscal = notaFiscal
-    await itemRepo .save(item)
-  }
+  const itensComNota = itensNota.map(item => ({
+    ...item,
+    notaFiscal,
+  }))
 
+  await itemRepo.save(itensComNota)
   return notaFiscal
 }
 

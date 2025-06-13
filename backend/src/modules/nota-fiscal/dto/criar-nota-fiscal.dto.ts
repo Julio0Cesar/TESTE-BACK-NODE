@@ -1,9 +1,9 @@
 export interface NotaFiscalProdutoDTO {
-  produtoId: string
-  quantidade: number
+  productId: string
+  quantity: number
 }
 
 export interface NotaFiscalDTO {
-  clienteId: string
-  produtos: NotaFiscalProdutoDTO[]
+  clientId: string
+  products: NotaFiscalProdutoDTO[]
 }

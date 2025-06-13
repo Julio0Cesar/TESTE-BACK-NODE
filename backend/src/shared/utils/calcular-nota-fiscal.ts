@@ -1,45 +1,42 @@
-import { NotaFiscalItem } from "../../core/entities/NotaFiscalItem"
+import Decimal from "decimal.js"
 import { Produto } from "../../core/entities/Produto"
+import { NotaFiscalItem } from "../../core/entities/NotaFiscalItem"
+import { NotaFiscalDTO } from "../../modules/nota-fiscal/dto/criar-nota-fiscal.dto"
 
-export function criarCalculadoraNotaFiscal() {
-  let valorTotal = 0
-  let icmsTotal = 0
-  let ipiTotal = 0
-  const itensNota: NotaFiscalItem[] = []
+export function calcularNotaFiscal(produtos: Produto[], itensNota: NotaFiscalDTO["products"]) {
+  let valorTotal = new Decimal(0)
+  let icmsTotal = new Decimal(0)
+  let ipiTotal = new Decimal(0)
+  const itensCalculados: NotaFiscalItem[] = []
 
-  function calcularItem(produto: Produto, quantidade: number) {
-    const preco = produto.preco
-    const icms = preco * quantidade * 0.18
-    const ipi = produto.industrializado ? preco * quantidade * 0.04 : 0
-    const total = preco * quantidade
+  for (let i = 0; i < itensNota.length; i++) {
+    const produto = produtos[i]
+    const { quantity } = itensNota[i]
+    const preco = new Decimal(produto.preco)
+    const qtd = new Decimal(quantity)
 
-    valorTotal += total + icms + ipi
-    icmsTotal += icms
-    ipiTotal += ipi
+    const icms = preco.mul(qtd).mul(0.18)
+    const ipi = produto.industrializado ? preco.mul(qtd).mul(0.04) : new Decimal(0)
+    const total = preco.mul(qtd)
 
-    const notaItem = {
+    valorTotal = valorTotal.plus(total).plus(icms).plus(ipi)
+    icmsTotal = icmsTotal.plus(icms)
+    ipiTotal = ipiTotal.plus(ipi)
+
+    itensCalculados.push({
       produto,
-      quantidade,
-      precoUnitario: preco,
-      icms,
-      ipi,
-      total,
-    } as NotaFiscalItem
-
-    itensNota.push(notaItem)
-  }
-
-  function resultado() {
-    return {
-      valorTotal,
-      icmsTotal,
-      ipiTotal,
-      itensNota,
-    }
+      quantidade: quantity,
+      precoUnitario: preco.toNumber(),
+      icms: icms.toNumber(),
+      ipi: ipi.toNumber(),
+      total: total.toNumber(),
+    } as NotaFiscalItem)
   }
 
   return {
-    calcularItem,
-    resultado,
+    valorTotal: valorTotal.toNumber(),
+    icmsTotal: icmsTotal.toNumber(),
+    ipiTotal: ipiTotal.toNumber(),
+    itens: itensCalculados,
   }
 }

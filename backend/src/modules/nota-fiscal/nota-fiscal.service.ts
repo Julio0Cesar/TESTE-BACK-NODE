@@ -1,39 +1,26 @@
 import { AppDataSource } from "../../ormconfig"
 import { NotaFiscal } from "../../core/entities/NotaFiscal"
 import { NotaFiscalDTO } from "./dto/criar-nota-fiscal.dto"
-import { HttpError } from "../../shared/errors/error-middleware"
-import { buscarClientePorId } from "../cliente/cliente.repository"
-import { buscarProdutoPorId } from "../produto/produto.repository"
-import { criarCalculadoraNotaFiscal } from "../../shared/utils/calcular-nota-fiscal"
+import { validarClienteNaoEncontradoPorId } from "../cliente/cliente.service"
+import { validarProdutoNaoEncontradoPorId } from "../produto/produto.service"
+import { calcularNotaFiscal } from "../../shared/utils/calcular-nota-fiscal"
 import { salvarNotaFiscal } from "./nota-fiscal.repository"
+import { gerarXmlNotaFiscal } from "../../shared/utils/gerar-xml"
+import { HttpError } from "../../shared/errors/error-middleware"
 
 export async function registrarNovaNotaFiscal(data: NotaFiscalDTO) {
-  const { clienteId, produtos } = data
+  const cliente = await validarClienteNaoEncontradoPorId(data.clientId)
+  const produtos = await buscarProdutosNaNotaFiscal(data.products)
 
-  const clienteRepo = await buscarClientePorId(clienteId)
-  if (!clienteRepo) 
-    throw new HttpError("Cliente não encontrado", 400)
-
-  const calculadora = criarCalculadoraNotaFiscal()
-  for (const item of produtos) {
-    const produto = await buscarProdutoPorId(item.produtoId)
-
-    if (!produto) 
-      throw new HttpError("Produto não encontrado", 400)
-
-    calculadora.calcularItem(produto, item.quantidade)
-  }
+  const resultado = calcularNotaFiscal(produtos, data.products)
   
-  const  { valorTotal, icmsTotal, ipiTotal, itensNota } = calculadora.resultado()
-  const notaFiscal = await salvarNotaFiscal({
-    cliente: clienteRepo,
-    valorTotal,
-    icmsTotal,
-    ipiTotal,
-    itens: itensNota,
-    xml: "ainda_nao_gerado",
-  })
+  const notaFiscalParcial = { 
+    cliente, 
+    ...resultado, 
+    xml: gerarXmlNotaFiscal( { cliente, ...resultado } as NotaFiscal) 
+  }
 
+  const notaFiscal = await salvarNotaFiscal(notaFiscalParcial)  
   return notaFiscal
 }
 
@@ -50,4 +37,18 @@ export async function listarNotaFiscalPorId(id: string) {
     relations: ["cliente", "itens", "itens.produto"],
   })
   return nota
+}
+
+async function buscarProdutosNaNotaFiscal(itens: NotaFiscalDTO["products"]) {
+  if (!Array.isArray(itens)) 
+    throw new HttpError("Produtos da nota fiscal devem ser uma lista", 400)
+  
+  const produtos = []
+
+  for (const item of itens) {
+    const produto = await validarProdutoNaoEncontradoPorId(item.productId)
+    produtos.push(produto)
+  }
+
+  return produtos
 }
