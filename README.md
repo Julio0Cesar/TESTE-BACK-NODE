@@ -225,6 +225,9 @@ BACKEND_PORT=3000
 * Júlio César
 * [GitHub](https://github.com/Julio0Cesar) • [LinkedIn](https://linkedin.com/in/julio-rios)
 
+#### Tempo para conclusão do projeto
+
+* 5 dias
 ---
 
 ## ⚖️ Licença
