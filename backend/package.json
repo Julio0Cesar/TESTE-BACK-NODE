@@ -25,13 +25,17 @@
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.24",
     "winston": "^3.17.0",
-    "xmlbuilder2": "^3.1.1"
+    "xmlbuilder2": "^3.1.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^24.0.0",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/yamljs": "^0.2.34",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   }
