@@ -7,7 +7,7 @@ export class NotaFiscalItem {
   @PrimaryGeneratedColumn("uuid")
   id!: string
 
-  @ManyToOne(() => NotaFiscal, nota => nota.itens, { nullable: false })
+  @ManyToOne(() => NotaFiscal, nota => nota.itens, { nullable: false, onDelete: "CASCADE"  })
   notaFiscal!: NotaFiscal
 
   @ManyToOne(() => Produto, { eager: true, nullable: false })

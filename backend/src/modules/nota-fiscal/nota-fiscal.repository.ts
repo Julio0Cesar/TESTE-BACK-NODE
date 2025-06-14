@@ -20,22 +20,23 @@ export async function salvarNotaFiscal(notaFiscalParcial: Partial<NotaFiscal> ) 
   return notaFiscal
 }
 
-export async function buscarNotasFiscais(){
-  const notaFiscalRepo = AppDataSource.getRepository(NotaFiscal)
-  return await notaFiscalRepo.find()
-}
-
 export async function buscarNotasFiscaisPorId(id: string, clienteId: string) {
-    console.log("id:", id)
-    console.log("clienteid:", clienteId)
     const notaFiscalRepo = AppDataSource.getRepository(NotaFiscal)
-    const resultado = await notaFiscalRepo.findOne({
+    return await notaFiscalRepo.findOne({
     where: {
       id,
       cliente: { id: clienteId }
     },
       relations: ["cliente", "itens", "itens.produto"],
     })
-    console.log("resultado: ",resultado)
-    return resultado
+}
+
+export async function buscarNotasFiscaisPorCliente(clienteId: string) {
+  const notaFiscalRepo = AppDataSource.getRepository(NotaFiscal)
+  return await notaFiscalRepo.find({
+    where: {
+      cliente: { id: clienteId }
+    },
+    relations: ["cliente", "itens", "itens.produto"],
+  })
 }

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, OneToMany } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne, OneToMany, JoinColumn } from "typeorm"
 import { Cliente } from "./Cliente"
 import { NotaFiscalItem } from "./NotaFiscalItem"
 
@@ -8,6 +8,7 @@ export class NotaFiscal {
   id!: string
 
   @ManyToOne(() => Cliente, { eager: true })
+  @JoinColumn({ name: "clienteId" })
   cliente!: Cliente
 
   @OneToMany(() => NotaFiscalItem, item => item.notaFiscal, { cascade: true })

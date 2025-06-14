@@ -4,7 +4,7 @@ import { NotaFiscalDTO } from "./dto/criar-nota-fiscal.dto"
 import { validarClienteNaoEncontradoPorId } from "../cliente/cliente.service"
 import { validarProdutoNaoEncontradoPorId } from "../produto/produto.service"
 import { calcularNotaFiscal } from "../../shared/utils/calcular-nota-fiscal"
-import { buscarNotasFiscais, buscarNotasFiscaisPorId, salvarNotaFiscal } from "./nota-fiscal.repository"
+import { buscarNotasFiscaisPorId, buscarNotasFiscaisPorCliente, salvarNotaFiscal } from "./nota-fiscal.repository"
 import { gerarXmlNotaFiscal } from "../../shared/utils/gerar-xml"
 import { HttpError } from "../../shared/middleware/error-middleware"
 
@@ -24,11 +24,15 @@ export async function registrarNovaNotaFiscal(data: NotaFiscalDTO) {
   return notaFiscal
 }
 
-export async function listarNotasFiscais() {
-  return await buscarNotasFiscais()
+export async function listarNotaFiscalPorCliente(clienteId: string) {
+  const notaFiscal = await buscarNotasFiscaisPorCliente(clienteId)
+  if (notaFiscal.length === 0)
+    throw new HttpError("Nota fiscal não encontrada", 404)
+  
+  return notaFiscal
 }
 
-export async function listarNotaFiscalPorId(id: string, clienteId: string) {
+export async function detalharNotaFiscalPorId(id: string, clienteId: string) {
   const notaFiscal = await buscarNotasFiscaisPorId(id, clienteId)
   if (!notaFiscal)
     throw new HttpError("Nota fiscal não encontrada", 404)
