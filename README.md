@@ -1,127 +1,232 @@
-# 📄 Sistema de Emissão de Notas Fiscais
+# API de Emissão de Nota Fiscal
 
-Bem-vindo ao desafio de backend!  
+API REST para gerenciamento de clientes, produtos e emissão de notas fiscais eletrônicas, incluindo geração de XML e cálculo de impostos (ICMS e IPI).
 
----
+## 🚀 Funcionalidades
 
-## 🛠️ Tecnologias Utilizadas
-
-- **Node.js** + **TypeScript**
-- **Express.js**
-- **MariaDB**
-- **Joi** para validações
-- **JWT** para autenticação
-- **Swagger** para documentação da API
-
----
-
-## 🎯 Funcionalidades
-
-- Cadastro de **clientes** e **produtos**
-- Emissão de **notas fiscais eletrônicas**
-- Validações fiscais:
-  - CNPJ
-  - CFOP
-  - NCM
-- Cálculo automático de impostos:
-  - **ICMS** (18%)
-  - **IPI** (4%)
-- Geração de **XML da Nota Fiscal**
-- Listagem e consulta de notas emitidas
-- Histórico de emissão
-- Autenticação de usuários via JWT
+- 🔐 Autenticação via JWT
+- 👤 CRUD de Clientes
+- 📦 CRUD de Produtos
+- 🧾 Emissão de Nota Fiscal
+  - Cálculo automático de ICMS e IPI
+  - Geração de XML da nota
+- ✅ Validação de dados com Joi
+- 🛡️ Middlewares globais de autenticação, validação e tratamento de erros
+- 📜 Logs centralizados em arquivo (`/logs/app.log`)
+- 🧠 Documentação Swagger
 
 ---
 
-## 📦 Endpoints Principais
+## 🧠 Tecnologias e Ferramentas
 
-### Clientes
-- `POST /clients` - Criar cliente
-- `GET /clients` - Listar clientes
-
-### Produtos
-- `POST /products` - Cadastrar produto
-- `GET /products` - Listar produtos
-
-### Notas Fiscais
-- `POST /invoices` - Emitir nota fiscal
-- `GET /invoices` - Listar notas
-- `GET /invoices/:id` - Detalhar nota
+- Node.js
+- TypeScript
+- Express
+- TypeORM
+- MariaDB
+- Joi
+- Swagger (OpenAPI)
+- Docker
 
 ---
 
-## 📄 Exemplo de Payload para Emissão de Nota
+## 📂 Arquitetura do Projeto
 
-```json
-{
-  "clientId": "cliente-uuid",
-  "products": [
-    {
-      "productId": "produto-uuid",
-      "quantity": 3
-    },
-    {
-      "productId": "produto-uuid-2",
-      "quantity": 1
-    }
-  ]
-}
+- **/modules** → Funcionalidades (clientes, produtos, notas, autenticação)  
+- **/shared** → Middleware, utils, documentação, logs e dados auxiliares  
+- **/core** → Entidades, tipos e erros globais  
+- **/config** → Configurações de banco, ORM e variáveis  
+
+```plaintext
+src/
+├── config/
+├── core/
+├── modules/
+├── shared/
+````
+
+* **Modularização por domínio.** Cada módulo possui seu próprio controller, router, service, repository, DTO e schemas.
+
+---
+
+## ⚙️ Pré-requisitos
+
+* Node.js ^18.x
+* Docker e Docker Compose (opcional, mas recomendado)
+* Banco de dados MariaDB
+
+---
+
+## 🏗️ Instalação e Execução Local
+
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/Julio0Cesar/nf-emition-system-julio
+cd nf-emition-system-julio
 ```
 
-A resposta incluirá:
-- Detalhes da nota
-- Cálculo de impostos
-- Valor total
-- XML da nota em base64
+2. Instale as dependências ou rode Docker:
+
+```bash
+npm install
+```
+
+3. Configure as variáveis de ambiente:
+
+Crie um arquivo `.env` em api/:
+
+```env
+MARIADB_HOST=localhost ou mariadb se estiver usando docker
+MARIADB_USER=seu_user
+MARIADB_PASSWORD=sua_senha
+MARIADB_DATABASE=gp_db
+MARIADB_PORT=3306
+BACKEND_PORT=3000
+JWT_SECRET=seu_segredo
+```
+
+4. Configure o banco:
+
+* Crie o banco manualmente ou rode o container do MariaDB com Docker.
+
+5. Rode a aplicação:
+
+```bash
+npm run dev
+```
 
 ---
 
-## ✅ Regras de Negócio
+## 🐳 Docker (opcional)
 
-- **CNPJ** validado conforme Receita Federal
-- **CFOP** e **NCM** validados conforme padrões fiscais
-- **ICMS** aplicado em todos os produtos (18%)
-- **IPI** aplicado se o produto for industrializado (4%)
+Para subir com Docker:
+
+```bash
+docker compose -p nf-emition-system up --build
+```
+
+Caso use docker adicione mais um arquivo `.env` na raiz do projeto:
+
+```env
+MARIADB_ROOT_PASSWORD=sua_senha
+MARIADB_ADMIN_PASSWORD=sua_senha
+BACKEND_PORT=3000
+```
+
+> **Obs:** O Dockerfile atual é apenas de desenvolvimento (`Dockerfile.dev`).
 
 ---
 
-## 📌 Regras de Entrega
+## 📑 Documentação da API
 
-### **1. Repositório no GitHub**
-- Faça um **fork** deste repositório para sua conta pessoal
-- Mantenha o repositório **público** durante o desenvolvimento
-- Nome do repositório: `nf-emition-system-[seu-nome]`
+* Acesse: [`http://localhost:3000/docs`](http://localhost:3000/docs)
 
-### **2. Padrão de Commits**
-- Use **commits atômicos** (1 feature por commit)
-- Formato: `tipo: descrição` (ex: `feat: autenticação jwt`)
-- Tipos válidos: `feat`, `fix`, `style`, `refactor`, `docs`, `test`
+* A documentação foi feita com Swagger (OpenAPI) e inclui todos os endpoints dos módulos de:
 
-### **3. Organização do Código**
-- Mantenha uma **estrutura de pastas clara**
-- **Documente** componentes complexos
-- Siga boas práticas de **clean code**
+  * Cliente
+  * Produto
+  * Nota Fiscal
+  * Autenticação
 
-### **4. Prazo de Entrega**
-- **7 dias corridos** a partir do recebimento
-- **Entregas tardias serão desconsideradas**
-
-### **5. Itens Obrigatórios para Entrega**
-- ✅ Link do **repositório GitHub** (com histórico de commits)
-- ✅ URL do **deploy na vercel ou Netlify**
-- ✅ README completo com:
-  - 📌 **Instruções de instalação**
-  - 📌 **Dependências utilizadas**
-  - 📌 **Dificuldades encontradas**
-
-### **6. Critérios de Avaliação**
-- ✅ **Funcionalidades implementadas**
-- ✅ **Qualidade do código**
-- ✅ **Organização dos commits**
-- ✅ **Documentação**
-  
 ---
 
-## 🏁 Considerações Finais
+## 🔒 Middlewares Globais
 
-Este projeto tem o objetivo de aplicar boas práticas, regras de negócio reais e validações fiscais!
+* **`autenticarJWT`** → Valida o token JWT
+* **`validarSchemas`** → Valida os dados das requisições com Joi
+* **`errorHandler`** → Trata erros conhecidos e desconhecidos
+* **`notFoundHandler`** → Retorna erro 404 para rotas inexistentes
+
+---
+
+## 📜 Logs
+
+* Os logs são salvos no arquivo:
+
+```plaintext
+/logs/app.log
+```
+
+* Tipos de logs:
+
+  * Erros de autenticação
+  * Erros de validação
+  * Erros internos do servidor
+  * Erros de banco (QueryFailedError)
+  * Rotas não encontradas
+
+---
+
+## 📚 Dados Auxiliares
+
+* Arquivos JSON na pasta `/shared/data`:
+
+  * **cfop.json** → Lista de CFOP válidos
+  * **ncm.json** → Lista de NCM válidos
+  * **LinksDocs.md** → Documentação e referências sobre extração dos dados
+
+---
+
+## 🌐 Endpoints principais
+
+| Método | Rota           | Descrição                 |
+| ------ | -------------- | ------------------------- |
+| POST   | /auth/login    | Login e geração do JWT    |
+| POST   | /clients       | Cadastrar cliente         |
+| GET    | /clients       | Listar clientes           |
+| POST   | /products      | Cadastrar produto         |
+| GET    | /products      | Listar produtos           |
+| POST   | /invoices      | Emitir nota fiscal        |
+| GET    | /invoices      | Listar notas fiscais      |
+| GET    | /invoices/{id} | Buscar nota fiscal por ID |
+
+> ⚠️ Os endpoints abaixo exigem autenticação via token Bearer.
+>  - GET:/clients 
+>  - POST:/products 
+>  - POST:/invoices 
+>  - GET:/invoices 
+>  - GET:/invoices/{id}
+
+---
+
+## 🔧 Variáveis de ambiente
+
+| Variável     | Descrição                 |
+| ------------ | ------------------------- |
+| DB\_HOST     | Host do banco             |
+| DB\_PORT     | Porta do banco            |
+| DB\_USERNAME | Usuário do banco          |
+| DB\_PASSWORD | Senha do banco            |
+| DB\_DATABASE | Nome do banco             |
+| JWT\_SECRET  | Segredo para gerar tokens |
+
+---=
+
+## 🐛 Dificuldades Encontradas
+
+* **JWT inválido:** O token não era aceito na validação por erro no `JWT_SECRET`. Corrigi garantindo que a chave usada na geração fosse a mesma da validação.
+
+* **Erro no `/invoices/:id`:** A busca falhava por uso errado do `where`, estava passando dois `id` ao invés de `id` e `clienteId`. Corrigi ajustando os filtros corretamente.
+
+---
+
+## 🧠 Melhorias Futuras (To-Do)
+
+* 🔸 Implementar testes automatizados
+* 🔸 Melhorar cobertura de erros do banco
+* 🔸 Melhorias no tratamento de edge cases
+* 🔸 Deploy automático com GitHub Actions (CI/CD)
+
+---
+
+## 👤 Autor
+
+* Júlio César
+* [GitHub](https://github.com/Julio0Cesar) • [LinkedIn](https://linkedin.com/in/julio-rios)
+
+---
+
+## ⚖️ Licença
+
+MIT License.
