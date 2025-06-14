@@ -19,7 +19,7 @@
 # ========================
 backend/.vs/
 backend/node_modules
-backend/src/logs
+backend/logs/
 
 # ========================
 # DOCKER
