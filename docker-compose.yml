@@ -23,14 +23,14 @@ services:
     env_file:
       - .env
 
-  backend:
+  api:
     build:
-      context: ./backend
+      context: ./api
       dockerfile: Dockerfile.dev
-    container_name: backend
+    container_name: api
     volumes:
-      - ./backend:/app:delegated
-      - ./backend/logs:/app/logs
+      - ./api:/app:delegated
+      - ./api/logs:/app/logs
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     command: sh -c "npm install && npm run dev"
@@ -41,7 +41,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     env_file:
-      - backend/.env
+      - api/.env
 
 networks:
   app-network:

@@ -17,9 +17,9 @@
 # ========================
 # BACKEND ( Node / Express)
 # ========================
-backend/.vs/
-backend/node_modules
-backend/logs/
+api/.vs/
+api/node_modules
+api/logs/
 
 # ========================
 # DOCKER
