@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt'
-import { HttpError } from "../../shared/middleware/error-middleware";
-import { buscarClientePorEmail } from "../cliente/cliente.repository";
-import { AutenticacaoDTO } from "./dto/autenticacao.dto";
-import { gerarToken } from '../../shared/utils/gerar-jwt';
+import { HttpError } from "../../shared/middleware/error-middleware"
+import { buscarClientePorEmail } from "../cliente/cliente.repository"
+import { AutenticacaoDTO } from "./dto/autenticacao.dto"
+import { gerarToken } from '../../shared/utils/gerar-jwt'
 
 export async function registrarNovoLogin(data: AutenticacaoDTO){
     const cliente = await validarClienteExiste(data.email, data.senha)
