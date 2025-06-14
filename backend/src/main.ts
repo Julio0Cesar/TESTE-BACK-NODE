@@ -1,43 +1,20 @@
-import express from "express"
-import "reflect-metadata"
-import dotenv from "dotenv"
+import { app, port } from "./shared/app"
 import { testDbConnection } from "./config/databaseConfig"
-import { initializeDataSource } from "./ormconfig"
-import { errorHandler } from "./shared/middleware/error-middleware"
-import clienteRouter from "./modules/cliente/cliente.router"
-import produtoRouter from "./modules/produto/produto.router"
-import NotaFiscalRouter from "./modules/nota-fiscal/nota-fiscal.router"
-import autenticacaoRouter from "./modules/autenticacao/autenticacao.router"
-
-dotenv.config()
-
-const app = express()
-const port = process.env.BACKEND_PORT
-
-app.use(express.json())
-app.use("/cliente", clienteRouter)
-app.use("/produto", produtoRouter)
-app.use("/fatura", NotaFiscalRouter)
-app.use("/autenticacao", autenticacaoRouter)
-app.use(errorHandler)
-
-app.get("/", (_req, res) => {
-  res.send("API rodando com sucesso!")
-})
+import { initializeDataSource } from "./config/ormconfig"
+import { logger } from "./shared/logs/logger"
 
 async function startServer() {
   try {
-    await initializeDataSource()
-    console.log("Conexão com banco via TypeORM OK!")
-
     await testDbConnection()
-    console.log("Teste de conexão finalizado")
+
+    await initializeDataSource()
+    logger.info("Conexão com banco via TypeORM OK!")
 
     app.listen(port, () => {
-      console.log(`Server tá no ar na porta ${port}`)
+      logger.info(`Server tá no ar na porta ${port}`)
     })
   } catch (error) {
-    console.error("Erro ao iniciar aplicação:", error)
+    logger.error("Erro ao iniciar aplicação:", error)
     process.exit(1)
   }
 }

@@ -1,3 +1,16 @@
+/**
+ * @returns Um objeto contendo:
+ *   - valorTotal: soma total dos produtos mais impostos,
+ *   - icmsTotal: total do ICMS (18%) sobre os produtos,
+ *   - ipiTotal: total do IPI (4%) apenas para produtos industrializados,
+ *   - itens: lista de itens com cálculo detalhado para cada um.
+ * 
+ * O cálculo para cada item:
+ *  - ICMS = preço * quantidade * 18%
+ *  - IPI = preço * quantidade * 4% se industrializado, senão zero
+ *  - Total = preço * quantidade
+ */
+
 import Decimal from "decimal.js"
 import { Produto } from "../../core/entities/Produto"
 import { NotaFiscalItem } from "../../core/entities/NotaFiscalItem"

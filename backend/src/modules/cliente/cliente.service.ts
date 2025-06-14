@@ -1,30 +1,27 @@
-import { HttpError } from "../../shared/middleware/error-middleware"
-import { hashSenha } from "../../shared/utils/hash"
+import { HttpError } from "../../core/error/HttpError"
+import { gerarHashSenha } from "../../shared/utils/gerar-hash"
 import { buscarClientes, buscarClientePorEmailOuCnpj, salvarCliente, buscarClientePorId } from "./cliente.repository"
 import { ClienteDTO } from "./dto/create-cliente.dto"
 
 export async function registrarNovoCliente(data: ClienteDTO) {
-  await validarClienteRegistradoPorEmailOuCnpj(data.email, data.cnpj)
-
-  const senhaHash = await hashSenha(data.senha)
+  await validarClienteRegistrados(data.email, data.cnpj)
+  const senhaHash = await gerarHashSenha(data.senha)
   data.senha = senhaHash 
-
   return await salvarCliente(data)
 }
-
 export async function listarClientes() {
-  return await buscarClientes() 
+  const clientes = await buscarClientes() 
+  if (!clientes) throw new HttpError("Não existem clientes registrados", 400)
+  return clientes
 }
 
-export async function validarClienteRegistradoPorEmailOuCnpj(email: string, cnpj:  string){
+// Validacoes
+export async function validarClienteRegistrados(email: string, cnpj:  string){
   const existente = await buscarClientePorEmailOuCnpj(email, cnpj)
-  if (existente) 
-    throw new HttpError("Cliente já registrado", 400)
+  if (existente) throw new HttpError("Cliente já registrado", 400)
 }
-
-export async function validarClienteNaoEncontradoPorId(id: string) {
+export async function validarClienteNaoEncontrado(id: string) {
   const existente = await buscarClientePorId(id)
-  if (!existente) 
-    throw new HttpError("Cliente não encontrado", 400)
+  if (!existente) throw new HttpError("Cliente não encontrado", 400)
   return existente
 }

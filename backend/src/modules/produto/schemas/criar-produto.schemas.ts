@@ -2,7 +2,7 @@ import Joi from "joi"
 import { validarNCM } from "../../../shared/utils/validar-ncm"
 import { validarCFOP } from "../../../shared/utils/validar-cfop"
 
-export const createProdutoSchema = Joi.object({
+export const criarProdutoSchema = Joi.object({
     nome: Joi.string()
         .min(1)
         .max(100)

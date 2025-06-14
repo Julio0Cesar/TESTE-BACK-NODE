@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
-// uso de string para não dar problemas com zeros a esquerda
+// NCM e CFOP usado como string pra preservar zeros à esquerda
 @Entity()
 export class Produto {
   @PrimaryGeneratedColumn("uuid")

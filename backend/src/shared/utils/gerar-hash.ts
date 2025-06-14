@@ -2,7 +2,7 @@ import bcrypt from "bcrypt"
 
 const SALT_ROUNDS = 10
 
-export async function hashSenha(senha: string): Promise<string> {
+export async function gerarHashSenha(senha: string): Promise<string> {
   return bcrypt.hash(senha, SALT_ROUNDS)
 }
 
