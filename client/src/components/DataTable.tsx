@@ -1,4 +1,4 @@
-import { DataGrid, type GridColDef, type GridRowSelectionModel } from '@mui/x-data-grid'
+import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import Paper from '@mui/material/Paper'
 import { useEffect, useState } from 'react'
 import { obterProdutos } from '../services/products/listarProdutosService'
@@ -12,22 +12,28 @@ const columns: GridColDef[] = [
 
 const paginationModel = { page: 0, pageSize: 10 }
 
-export default function DataTable({ setSelecionados }: { setSelecionados: (produtos: any[]) => void }) {
+export default function DataTable() {
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const [rows, setRows] = useState<any[]>([])
-  const [selectionModel, setSelectionModel] = useState<number[]>([])
 
-  useEffect(() => {
-    const fetchData = async () => {
+  const fetchData = async () => {
+    setLoading(true)
+
+    try {
       const produto = await obterProdutos()
       setRows(produto)
+      setError("")
+    } catch (error: any) {
+      setError((error as Error).message)
+    }finally {
+      setLoading(false)
     }
-    fetchData()
-  }, [])
+  }
 
   useEffect(() => {
-    const selecionados = rows.filter(row => selectionModel.includes(row.id))
-    setSelecionados(selecionados)
-  }, [selectionModel, rows, setSelecionados])
+    fetchData()
+  }, [])
 
   return (
     <Paper sx={{ height: 650, width: '50%' }}>
@@ -37,9 +43,7 @@ export default function DataTable({ setSelecionados }: { setSelecionados: (produ
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[10, 20]}
         checkboxSelection
-  rowSelection={selectionModel}
-  onRowSelectionChange={(newSelection) => setSelectionModel(newSelection)}
-        sx={{ border: 0 }}
+        sx={{ border: 0, }}
       />
     </Paper>
   )
