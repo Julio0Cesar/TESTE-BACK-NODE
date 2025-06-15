@@ -1,5 +1,6 @@
 import express from "express"
 import dotenv from "dotenv"
+import cors from 'cors'
 import clienteRouter from "../modules/cliente/cliente.router"
 import produtoRouter from "../modules/produto/produto.router"
 import notaFiscalRouter from "../modules/nota-fiscal/nota-fiscal.router"
@@ -14,6 +15,8 @@ const port = process.env.BACKEND_PORT
 const app = express()
 app.use(express.json())
 
+// Habilitando CORS
+app.use(cors())
 // Rotas
 app.use("/clients", clienteRouter)
 app.use("/products", produtoRouter)

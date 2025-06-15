@@ -27,3 +27,12 @@ export function autenticarJWT(req: RequisicaoAutenticada, res: Response, next: N
     return
   }
 }
+
+export async function validarToken(token: string) {
+  try {
+    const payload = jwt.verify(token, JWT_SECRET)
+    return payload
+  } catch (err) {
+    throw new Error("Token inválido ou expirado")
+  }
+}

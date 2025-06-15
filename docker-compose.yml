@@ -43,6 +43,24 @@ services:
     env_file:
       - api/.env
 
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    container_name: client
+    volumes:
+      - ./client:/app
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    command: sh -c "npm install && npm run dev"
+    networks:
+      - app-network
+    depends_on:
+      - api
+    restart: unless-stopped
+    env_file:
+      - client/.env
+
 networks:
   app-network:
     driver: bridge

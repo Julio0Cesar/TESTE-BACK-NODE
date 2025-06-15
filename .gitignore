@@ -22,6 +22,12 @@ api/node_modules
 api/logs/
 
 # ========================
+# FRONTEND ( Typescript / React Vite )
+# ========================
+client/.vs/
+client/node_modules
+
+# ========================
 # DOCKER
 # ========================
 *.pid

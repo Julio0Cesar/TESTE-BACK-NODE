@@ -3,6 +3,7 @@ import { buscarClientePorEmail } from "../cliente/cliente.repository"
 import { AutenticacaoDTO } from "./dto/autenticacao.dto"
 import { gerarToken } from '../../shared/utils/gerar-jwt'
 import { compararSenha } from '../../shared/utils/gerar-hash'
+import { validarToken } from "../../shared/middleware/validar-jwt-middleware"
 
 export async function registrarNovoLogin(data: AutenticacaoDTO){
   const cliente = await validarLogin(data.email, data.senha)
@@ -19,4 +20,10 @@ export async function validarLogin(email: string, senha: string){
   if (!senhaValida) throw new HttpError("Senha inválida", 400)
   
   return cliente
+}
+
+export async function validarTokenCliente(token: string){
+  if (!token) throw new HttpError("Token não informado")
+  
+  return await validarToken(token)
 }
